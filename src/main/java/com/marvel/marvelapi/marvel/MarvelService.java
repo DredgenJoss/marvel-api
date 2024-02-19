@@ -26,7 +26,6 @@ public class MarvelService {
     private Signs signs = new Signs();
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @SuppressWarnings("unchecked")
     public Object getMarvelCharacters(GetMarvelCharacterDto getMarvelCharacterDto)
             throws JsonMappingException, JsonProcessingException {
 
@@ -43,6 +42,9 @@ public class MarvelService {
             Map<String, Object> temporalItem = new HashMap<>();
             temporalItem.put("id", item.get("id").toString());
             temporalItem.put("name", item.get("name").toString().replace("\"", ""));
+            temporalItem.put("comics", item.get("comics"));
+            temporalItem.put("series", item.get("series"));
+
             dataList.add(temporalItem);
 
         }
