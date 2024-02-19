@@ -96,7 +96,7 @@ public class MarvelControler {
     }
     // 6. Mostrar las búsquedas que cualquier usuario haya hecho relacionadas a
     // historietas.
-    // ? get
+
     // 7. Mostrar las búsquedas que un usuario especifico ha realizado
 
     @SuppressWarnings("null")

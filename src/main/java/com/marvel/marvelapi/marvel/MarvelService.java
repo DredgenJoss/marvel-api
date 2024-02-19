@@ -37,21 +37,21 @@ public class MarvelService {
 
         List<Map<String, Object>> dataList = new ArrayList<>();
         // Response sin procesar
-        // return this.request(url);
+        return this.request(url);
 
-        JsonNode resolt = this.request(url).path("data").path("results");
+        // JsonNode resolt = this.request(url).path("data").path("results");
 
-        for (JsonNode item : resolt) {
-            Map<String, Object> temporalItem = new HashMap<>();
-            temporalItem.put("id", item.get("id").toString());
-            temporalItem.put("name", item.get("name").toString().replace("\"", ""));
-            temporalItem.put("comics", item.get("comics"));
-            temporalItem.put("series", item.get("series"));
+        // for (JsonNode item : resolt) {
+        // Map<String, Object> temporalItem = new HashMap<>();
+        // temporalItem.put("id", item.get("id").toString());
+        // temporalItem.put("name", item.get("name").toString().replace("\"", ""));
+        // temporalItem.put("comics", item.get("comics"));
+        // temporalItem.put("series", item.get("series"));
 
-            dataList.add(temporalItem);
+        // dataList.add(temporalItem);
 
-        }
-        return dataList;
+        // }
+        // return dataList;
 
     }
 
@@ -92,7 +92,7 @@ public class MarvelService {
     }
 
     public Object getComicsByCharacter(GetMarvelCharacterDto getMarvelCharacterDto) {
-        // TODO Auto-generated method stub
+        // TODO Auto-generated method
         throw new UnsupportedOperationException("Unimplemented method 'getComicsByCharacter'");
     }
 
