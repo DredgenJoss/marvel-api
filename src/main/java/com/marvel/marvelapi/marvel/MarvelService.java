@@ -36,6 +36,9 @@ public class MarvelService {
                 + sign.get("hash") + getMarvelCharacterDto.params();
 
         List<Map<String, Object>> dataList = new ArrayList<>();
+        // Response sin procesar
+        // return this.request(url);
+
         JsonNode resolt = this.request(url).path("data").path("results");
 
         for (JsonNode item : resolt) {
