@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.marvel.marvelapi.marvel.dto.GetMarvelCharacterDto;
 import com.marvel.marvelapi.marvel.dto.GetMarvelComicsDto;
 
@@ -24,7 +26,8 @@ public class MarvelControler {
             @RequestParam(name = "series", required = false, defaultValue = "-1") int series,
             @RequestParam(name = "orderBy", required = false, defaultValue = "") String orderBy,
             @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
-            @RequestParam(name = "offset", required = false, defaultValue = "0") int offset) {
+            @RequestParam(name = "offset", required = false, defaultValue = "0") int offset)
+            throws JsonMappingException, JsonProcessingException {
 
         GetMarvelCharacterDto getMarvelCharacterDto = new GetMarvelCharacterDto(name, comics, series, orderBy, limit,
                 offset);
@@ -54,7 +57,8 @@ public class MarvelControler {
     // 3. Obtener la imagen y descripción de un personaje especifico.
     @GetMapping("/characters/info")
     public ResponseEntity<Object> getMarvelCharacterData(
-            @RequestParam(name = "name", required = false, defaultValue = "") String name) {
+            @RequestParam(name = "name", required = false, defaultValue = "") String name)
+            throws JsonMappingException, JsonProcessingException {
 
         GetMarvelCharacterDto getMarvelCharacterDto = new GetMarvelCharacterDto(name);
         Object body = this.MarvelService.getMarvelCharacters(getMarvelCharacterDto);
@@ -67,7 +71,8 @@ public class MarvelControler {
     public ResponseEntity<Object> getMarvelComics(
             @RequestParam(name = "orderBy", required = false, defaultValue = "") String orderBy,
             @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
-            @RequestParam(name = "offset", required = false, defaultValue = "0") int offset) {
+            @RequestParam(name = "offset", required = false, defaultValue = "0") int offset)
+            throws JsonMappingException, JsonProcessingException {
 
         GetMarvelComicsDto getMarvelComicsDto = new GetMarvelComicsDto(orderBy, limit, offset);
         Object body = this.MarvelService.getMarvelComics(getMarvelComicsDto);
@@ -81,7 +86,8 @@ public class MarvelControler {
             @PathVariable int comicId,
             @RequestParam(name = "orderBy", required = false, defaultValue = "") String orderBy,
             @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
-            @RequestParam(name = "offset", required = false, defaultValue = "0") int offset) {
+            @RequestParam(name = "offset", required = false, defaultValue = "0") int offset)
+            throws JsonMappingException, JsonProcessingException {
 
         GetMarvelComicsDto getMarvelComicsDto = new GetMarvelComicsDto(comicId, orderBy, limit, offset);
         Object body = this.MarvelService.getMarvelComicById(getMarvelComicsDto);
@@ -102,7 +108,5 @@ public class MarvelControler {
 
     // TODO: .ENV
     // TODO: FORMATEAR RESPUESTA
-
-    // TODO: SPRING SECURITY
 
 }

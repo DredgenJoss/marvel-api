@@ -2,9 +2,15 @@ package com.marvel.marvelapi.marvel;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvel.marvelapi.marvel.dto.GetMarvelCharacterDto;
 import com.marvel.marvelapi.marvel.dto.GetMarvelComicsDto;
 import com.marvel.marvelapi.utils.ConstantsUtils;
@@ -18,8 +24,11 @@ import org.springframework.web.client.RestTemplate;
 public class MarvelService {
 
     private Signs signs = new Signs();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public Object getMarvelCharacters(GetMarvelCharacterDto getMarvelCharacterDto) {
+    @SuppressWarnings("unchecked")
+    public Object getMarvelCharacters(GetMarvelCharacterDto getMarvelCharacterDto)
+            throws JsonMappingException, JsonProcessingException {
 
         Map<String, String> sign = signs.generateHash();
 
@@ -27,21 +36,21 @@ public class MarvelService {
                 + ConstantsUtils.PUBLIC_KEY + "&hash="
                 + sign.get("hash") + getMarvelCharacterDto.params();
 
-        return this.request(url);
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        JsonNode resolt = this.request(url).path("data").path("results");
+
+        for (JsonNode item : resolt) {
+            Map<String, Object> temporalItem = new HashMap<>();
+            temporalItem.put("id", item.get("id").toString());
+            temporalItem.put("name", item.get("name").toString().replace("\"", ""));
+            dataList.add(temporalItem);
+
+        }
+        return dataList;
+
     }
 
-    Object getComicsByCharacter(GetMarvelCharacterDto getMarvelCharacterDto) {
-
-        Map<String, String> sign = signs.generateHash();
-
-        String url = ConstantsUtils.BASE_URL + "/characters/" + getMarvelCharacterDto.getCharacterId() + "/comics?ts="
-                + sign.get("timestamp") + "&apikey="
-                + ConstantsUtils.PUBLIC_KEY + "&hash="
-                + sign.get("hash") + getMarvelCharacterDto.params();
-        return this.request(url);
-    }
-
-    Object getMarvelComics(GetMarvelComicsDto getMarvelComicsDto) {
+    Object getMarvelComics(GetMarvelComicsDto getMarvelComicsDto) throws JsonMappingException, JsonProcessingException {
 
         Map<String, String> sign = signs.generateHash();
 
@@ -52,7 +61,8 @@ public class MarvelService {
         return this.request(url);
     }
 
-    Object getMarvelComicById(GetMarvelComicsDto getMarvelComicsDto) {
+    Object getMarvelComicById(GetMarvelComicsDto getMarvelComicsDto)
+            throws JsonMappingException, JsonProcessingException {
 
         Map<String, String> sign = signs.generateHash();
 
@@ -64,18 +74,21 @@ public class MarvelService {
     }
 
     @SuppressWarnings("null")
-    private Object request(String url) {
+    private JsonNode request(String url) throws JsonMappingException, JsonProcessingException {
         RequestEntity<Void> requestEntity = null;
         try {
             requestEntity = new RequestEntity<>(HttpMethod.GET, new URI(url));
         } catch (URISyntaxException e) {
             System.out.println("ERROR: GET error, " + e.toString());
-            return "{}";
+            return objectMapper.readTree("{}");
         }
         ResponseEntity<String> responseEntity = new RestTemplate().exchange(requestEntity, String.class);
-        Object response = new HashMap<>();
-        response = responseEntity.getBody();
-        return response;
+        return objectMapper.readTree(responseEntity.getBody());
+    }
+
+    public Object getComicsByCharacter(GetMarvelCharacterDto getMarvelCharacterDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getComicsByCharacter'");
     }
 
 }
